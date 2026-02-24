@@ -12,8 +12,7 @@ license: MIT
 ## Prerequisites
 
 1. **Node.js installed** — Required for the Playwright MCP server
-2. **Python with uv/uvx installed** — Required for AWS MCP servers (only needed for AWS-related traces). Install uv: https://docs.astral.sh/uv/getting-started/installation/
-3. **fpdf2** (optional) — Only needed if generating PDF reports: `pip3 install fpdf2`
+2. **fpdf2** (optional) — Only needed if generating PDF reports: `pip3 install fpdf2`
 
 ## Quick Test
 
@@ -22,32 +21,6 @@ After installing this power, verify it works:
 1. Ask: *"Navigate to https://smith.langchain.com and take a screenshot"*
 2. If Playwright opens the page and captures a screenshot, the power is working
 3. If you get a browser error, run: `npx -y @playwright/mcp@latest` to verify the Playwright MCP server installs correctly
-
-## When to Activate AWS Servers
-
-The AWS MCP servers (aws-docs, aws-api, aws-knowledge) are not included by default to keep the power lightweight. If you are analyzing traces that involve AWS services (Bedrock, Lambda, SageMaker, etc.), add them to your workspace MCP config manually:
-
-```json
-{
-  "mcpServers": {
-    "aws-docs": {
-      "command": "uvx",
-      "args": ["awslabs.aws-documentation-mcp-server@latest"],
-      "env": { "FASTMCP_LOG_LEVEL": "ERROR" }
-    },
-    "aws-api": {
-      "command": "uvx",
-      "args": ["awslabs.aws-api-mcp-server@latest"],
-      "env": { "FASTMCP_LOG_LEVEL": "ERROR" }
-    },
-    "aws-knowledge": {
-      "command": "uvx",
-      "args": ["awslabs.aws-knowledge-mcp-server@latest"],
-      "env": { "FASTMCP_LOG_LEVEL": "ERROR" }
-    }
-  }
-}
-```
 
 ---
 
@@ -270,7 +243,7 @@ LangSmith uses a virtualized list. Only nodes in the visible scroll area are in 
 
 ## Configuration
 
-No additional configuration required beyond the MCP servers defined in mcp.json. See the Onboarding section above for prerequisites and optional AWS server setup.
+No additional configuration required beyond the MCP servers defined in mcp.json.
 
 ---
 

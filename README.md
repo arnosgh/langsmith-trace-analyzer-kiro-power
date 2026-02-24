@@ -27,7 +27,6 @@ analyze this LangSmith trace: https://smith.langchain.com/public/YOUR_TRACE_ID/r
 ## Prerequisites
 
 - Node.js (for Playwright MCP server)
-- Python with uv/uvx (optional, for AWS MCP servers)
 
 ## Structure
 
@@ -42,8 +41,6 @@ analyze this LangSmith trace: https://smith.langchain.com/public/YOUR_TRACE_ID/r
 ## Settings
 
 Once installed, the Playwright MCP server runs automatically. No additional configuration needed.
-
-If you're analyzing traces that involve AWS services (Bedrock, Lambda, SageMaker), see the Onboarding section in POWER.md for optional AWS MCP server setup.
 
 ## License
 

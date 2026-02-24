@@ -315,19 +315,4 @@ After presenting your findings, ask:
 
 Only if the user says yes, read the `report-generation` steering file.
 
----
 
-## AWS Service Context
-
-When the trace involves AWS services (Bedrock, Lambda, SageMaker, etc.):
-
-1. Use `aws-knowledge` to look up service behavior, limits, or pricing
-2. Use `aws-docs` to read specific documentation pages
-3. Use `aws-api` to check actual resource configurations if needed
-
-This helps explain observed behavior:
-- A Bedrock model call taking 30s might be expected for a large context window
-- A Lambda timeout might explain a tool call failure
-- Bedrock pricing can help calculate cost when the trace doesn't include cost fields
-
-Always cite the documentation source when referencing service behavior.

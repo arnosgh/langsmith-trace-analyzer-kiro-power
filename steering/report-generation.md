@@ -137,7 +137,7 @@ Numbered recommendations, each with:
 
 ### Model change recommendations:
 - Always caveat with quality validation
-- Verify throughput/performance claims with real data via aws-knowledge
+- Verify throughput/performance claims with real data when possible
 - Never recommend a model change without acknowledging the quality trade-off
 
 ---
@@ -351,7 +351,7 @@ The analysis phase should produce a `trace_data.json` file with this structure:
   ],
   "latency_waterfall": [
     {
-      "node": "ChatBedrock (routing)",
+      "node": "LLM (routing)",
       "type": "LLM",
       "duration": "3.2s",
       "percent": "7.1%",
