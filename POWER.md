@@ -243,6 +243,13 @@ No additional configuration required beyond the MCP servers defined in mcp.json.
 
 ---
 
+## License and support
+
+This power uses the [Playwright MCP server](https://github.com/microsoft/playwright-mcp) (Apache-2.0).
+
+- [Privacy Policy](https://github.com/microsoft/playwright-mcp/blob/main/LICENSE) — No user data is collected by this power
+- [Support](https://github.com/arnosgh/langsmith-trace-analyzer-kiro-power/issues)
+
 **Package:** `@playwright/mcp`
 **Connection:** Local Playwright MCP server (stdio)
 **License:** MIT
