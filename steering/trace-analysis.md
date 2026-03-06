@@ -14,9 +14,16 @@ This steering file is the complete methodology for analyzing a LangSmith trace. 
 - Guessing is worse than saying "I don't know yet — let me check."
 - Every factual claim must trace back to a specific node you inspected. No exceptions.
 
-This rule exists because LLM nodes are deceptive. A node named "Formatter" might be doing routing. A node named "Supervisor" might be generating the final response. Names lie. Data doesn't.
+This rule exists because names lie. Data doesn't.
 
-**Rule B: Never state a number you have not counted. No approximations. No "~". No "about".**
+**Rule B: Always verify data survives boundaries.**
+
+- Whenever data crosses a boundary — agent handoffs, tool returns, subgraph exits, serialization steps — verify that what was produced on one side actually arrives intact on the other side.
+- Read the output of the producing node. Then read the input of the consuming node. Compare them.
+- Look for: fields dropped, structures flattened to text, metadata stripped, arrays reduced to summaries, or intermediate nodes that transform data between producer and consumer.
+- If data is lost: quantify the impact — how many tokens and how much latency was spent generating data that never reaches its intended destination?
+
+**Rule C: Never state a number you have not counted. No approximations. No "~". No "about".**
 
 - If you say "20 fields", you must have counted exactly 20 fields by reading the RAW payload.
 - If you haven't counted yet, say "I need to check the RAW view to count the exact fields" — then go count.
@@ -91,7 +98,7 @@ I can deep-dive into:
 5. Or ask me a specific question about any node you see in the tree
 ```
 
-**IMPORTANT**: Do NOT answer questions about node behavior at this stage. You have only seen the tree overview. If the user asks "why is the Supervisor call slow?", respond: "I can see it took Xs from the overview, but I need to inspect its input/output to tell you why. Let me do that now."
+**IMPORTANT**: Do NOT answer questions about node behavior at this stage. If asked, say you need to inspect the node first.
 
 ---
 
@@ -177,16 +184,20 @@ Based on the user's question or choice from Phase 1:
 2. Map child nodes and their sequence
 3. Calculate overhead: wrapper duration minus sum of children
 
+#### Data boundary verification
+
+Whenever data crosses a boundary in the trace — between any two connected nodes — verify integrity:
+
+1. Identify every point where one node's output feeds into another node's input
+2. Read the producing node's output — record the full structure
+3. Read the consuming node's input — record what it actually received
+4. Compare: is anything missing, transformed, or flattened?
+5. If data is lost: quantify the waste — tokens and latency spent producing data that doesn't arrive
+6. Screenshot both sides for evidence
+
 ### Screenshot naming
 
-Save to `output/screenshots/` with descriptive numbered names:
-```
-01-trace-overview.png
-02-llm-supervisor-routing.png
-03-tool-fetch-orders.png
-04-llm-subagent-response.png
-...
-```
+Save to `output/screenshots/` with descriptive numbered names (e.g., `01-trace-overview.png`, `02-llm-routing.png`).
 
 ---
 
@@ -259,8 +270,9 @@ Present in this order:
 3. **Cost** — Where tokens/money were spent and why
 4. **Errors** — What failed and how the system recovered
 5. **Context flow** — How data moved through the system and whether context bloated
-6. **Architecture** — What pattern was used, whether models are well-matched to their roles
-7. **Opportunities** — Actionable suggestions with evidence and caveats
+6. **Data integrity** — Whether data produced by one node arrived intact at the consuming node, or was lost/transformed at boundaries
+7. **Architecture** — What pattern was used, whether models are well-matched to their roles
+8. **Opportunities** — Actionable suggestions with evidence and caveats
 
 ### Presentation rules
 
@@ -269,19 +281,12 @@ Present in this order:
 - **Quantify impact.** "This adds 3,200 tokens to every subsequent LLM call" — not "This inflates context."
 - **Frame suggestions as opportunities.** "It may be worth evaluating..." — not "You should..."
 - **Caveat model recommendations.** Any suggestion to change models must acknowledge quality trade-offs.
-- **Use exact numbers.** Never approximate when you have the real number.
-- **If you haven't verified something, say so.** "I haven't inspected nodes 7-12 yet — would you like me to check those?"
 
 ---
 
 ## Handling Follow-Up Questions
 
-After presenting your analysis, the user may ask follow-up questions. Rules:
-
-1. **If you already inspected the relevant node**: Answer directly with evidence.
-2. **If you haven't inspected it yet**: Say "I haven't looked at that node yet — let me check." Then go inspect it and come back with the answer.
-3. **If the question requires inspecting multiple nodes you haven't seen**: Say "That's a good question. I'll need to inspect [list of nodes] to answer accurately. Let me do that." Then inspect and answer.
-4. **Never extrapolate from one node to another.** Each node must be independently verified.
+After presenting your analysis, the user may ask follow-up questions. If you've already inspected the relevant node, answer with evidence. If not, say so and go inspect it before answering. Never extrapolate from one node to another.
 
 ---
 
@@ -304,6 +309,7 @@ In ReAct/tool-use agents, the LLM is called multiple times in a loop. Each call 
 - A system prompt instruction that forces verbose output (cite the exact instruction)
 - High TTFT on a streaming call indicating the model is struggling with a large prompt
 - Expensive model used for a simple routing decision that a smaller model could handle
+- Structured data generated at significant cost but lost or flattened before reaching its intended destination
 
 ---
 
@@ -311,7 +317,7 @@ In ReAct/tool-use agents, the LLM is called multiple times in a loop. Each call 
 
 After presenting your findings, ask:
 
-> "Would you like me to generate a formal report? I can produce it in Markdown (.md) or PDF (.pdf) format."
+> "Would you like me to generate a formal report?"
 
 Only if the user says yes, read the `report-generation` steering file.
 

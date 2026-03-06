@@ -12,7 +12,6 @@ license: MIT
 ## Prerequisites
 
 1. **Node.js installed** — Required for the Playwright MCP server
-2. **fpdf2** (optional) — Only needed if generating PDF reports: `pip3 install fpdf2`
 
 ## Quick Test
 
@@ -32,9 +31,9 @@ This power provides a rigorous, evidence-based methodology for analyzing LangSmi
 
 Two primary capabilities:
 
-1. **Trace Analysis** — Walk every node in the trace. Read every payload, every response, every system prompt, every tool call. Build a complete picture of latency, token usage, cost, errors, data flow, and architecture. Surface findings with direct evidence from the trace data. Present the analysis directly to the user in chat.
+1. **Trace Analysis** — Systematically inspect every node in the trace. Read actual payloads and responses, build a complete picture of latency, token usage, cost, errors, data flow, and architecture. Present findings with direct evidence.
 
-2. **Report Generation (on request only)** — After completing the analysis, ask the user if they would like a formal report. If yes, ask which format they prefer: Markdown (.md) or PDF (.pdf). Only generate the report when the user explicitly requests it.
+2. **Report Generation (on request only)** — After completing the analysis, ask the user if they would like a formal report. If yes, generate a Markdown (.md) report. Only generate the report when the user explicitly requests it.
 
 **Important:** This power uses Playwright browser automation to navigate LangSmith's web UI. Since LangSmith is a client-side SPA with no public MCP server, browser automation is the only way to read trace data interactively. This approach depends on LangSmith's current UI structure and may need updates if the UI changes significantly.
 
@@ -99,7 +98,7 @@ LangSmith can mask sensitive data in traces. When enabled, values are replaced w
 ## Available Steering Files
 
 - **trace-analysis** — The complete deep-analysis workflow. Covers trace loading, systematic node inspection, payload/response reading, analysis framework, and findings synthesis. Read this before starting any analysis.
-- **report-generation** — Report generation workflow in Markdown or PDF format. Only read this when the user explicitly requests a report after analysis is complete.
+- **report-generation** — Report generation workflow in Markdown format. Only read this when the user explicitly requests a report after analysis is complete.
 
 ## Available MCP Servers
 
@@ -189,16 +188,15 @@ LangSmith masks sensitive data: numbers become `<NUMBER>`, dates become `<DATE_T
 2. Read the `trace-analysis` steering file
 3. User provides a LangSmith trace URL
 4. Follow the systematic workflow: load trace → quick scan → ask user what to investigate → deep-dive → present findings
-5. After presenting findings, ask the user: "Would you like me to generate a formal report? I can produce it in Markdown (.md) or PDF (.pdf) format."
-6. Only if the user says yes, read the `report-generation` steering file and generate in their chosen format
+5. After presenting findings, ask the user: "Would you like me to generate a formal report?"
+6. Only if the user says yes, read the `report-generation` steering file and generate the report
 
 ### Generating a Report
 
 Reports are generated ONLY when the user explicitly requests one. Do not generate a report automatically.
 
-1. Ask the user which format they prefer: Markdown or PDF
-2. Read the `report-generation` steering file
-3. Follow the workflow for the chosen format
+1. Read the `report-generation` steering file
+2. Follow the workflow
 
 ## Tips
 
@@ -235,11 +233,9 @@ LangSmith uses a virtualized list. Only nodes in the visible scroll area are in 
 
 ## Resources
 
-- [LangSmith Observability Concepts](https://docs.langchain.com/langsmith/observability-concepts) — Traces, runs, threads, projects
-- [Run (Span) Data Format](https://docs.smith.langchain.com/reference/data_formats/run_data_format) — Complete field reference for run data
-- [Cost Tracking](https://docs.langchain.com/langsmith/cost-tracking) — How LangSmith tracks token usage and costs
-- [Trace Query Syntax](https://docs.langchain.com/langsmith/trace-query-syntax) — Filtering and querying traces
-- [Custom Instrumentation](https://docs.langchain.com/langsmith/annotate-code) — @traceable decorator and manual tracing
+- [LangSmith Observability Concepts](https://docs.langchain.com/langsmith/observability-concepts)
+- [Run (Span) Data Format](https://docs.smith.langchain.com/reference/data_formats/run_data_format)
+- [Cost Tracking](https://docs.langchain.com/langsmith/cost-tracking)
 
 ## Configuration
 
